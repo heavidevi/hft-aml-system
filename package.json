@@ -1,0 +1,23 @@
+{
+  "name": "hft-aml-system",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": ["backend", "frontend"],
+  "scripts": {
+    "engine:build": "make -C engine || mingw32-make -C engine",
+    "engine:test": "make -C engine test || mingw32-make -C engine test",
+    "dev:backend": "npm run start -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:servers": "concurrently -k -n BACKEND,FRONTEND -c cyan,magenta \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev": "npm run engine:build && npm run dev:servers",
+    "build:frontend": "npm run build -w frontend",
+    "test:backend": "npm test -w backend",
+    "setup:all": "npm install && npm run engine:build && npm run engine:test",
+    "dev:all": "concurrently -k -n BACKEND,FRONTEND,API_TEST -c cyan,magenta,yellow \"npm run dev:backend\" \"npm run dev:frontend\" \"wait-on tcp:4000 && npm run test:backend\"",
+    "run:all": "npm run setup:all && npm run dev:all"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "wait-on": "^8.0.1"
+  }
+}
